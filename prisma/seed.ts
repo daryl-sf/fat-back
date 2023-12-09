@@ -1,17 +1,22 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
+import { generateInviteCode } from "~/utils";
+
 const prisma = new PrismaClient();
 
 async function seed() {
-  const email = "rachel@remix.run";
+  const email = "daryl@remix.run";
 
   // cleanup the existing database
-  await prisma.user.delete({ where: { email } }).catch(() => {
+  await prisma.user.deleteMany({}).catch(() => {
+    // no worries if it doesn't exist yet
+  });
+  await prisma.league.deleteMany({}).catch(() => {
     // no worries if it doesn't exist yet
   });
 
-  const hashedPassword = await bcrypt.hash("racheliscool", 10);
+  const hashedPassword = await bcrypt.hash("daryliscool", 10);
 
   const user = await prisma.user.create({
     data: {
@@ -24,19 +29,31 @@ async function seed() {
     },
   });
 
-  await prisma.note.create({
+  await prisma.user.create({
     data: {
-      title: "My first note",
-      body: "Hello, world!",
-      userId: user.id,
+      email: "marina@remix.run",
+      password: {
+        create: {
+          hash: await bcrypt.hash("marinaiscool", 10),
+        },
+      },
     },
   });
 
-  await prisma.note.create({
+  await prisma.league.create({
     data: {
-      title: "My second note",
-      body: "Hello, world!",
-      userId: user.id,
+      name: "My League",
+      inviteCode: generateInviteCode(),
+      leagueAdmins: {
+        create: {
+          userId: user.id,
+        },
+      },
+      leagueUsers: {
+        create: {
+          userId: user.id,
+        },
+      },
     },
   });
 
