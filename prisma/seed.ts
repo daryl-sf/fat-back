@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
+import plTeams from "~/plTeams.json";
 import { generateInviteCode } from "~/utils";
 
 const prisma = new PrismaClient();
@@ -56,6 +57,19 @@ async function seed() {
       },
     },
   });
+
+  await Promise.all(
+    plTeams.map((team) =>
+      prisma.team.create({
+        data: {
+          name: team.name,
+          shortName: team.shortName,
+          imageUrl: team.imageUrl,
+          relegated: team.relegated,
+        },
+      }),
+    ),
+  );
 
   console.log(`Database has been seeded. 🌱`);
 }

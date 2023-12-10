@@ -13,17 +13,23 @@ import {
   deleteLeague,
   leaveLeague,
 } from "~/models/league.server";
+import { getTeamListItems } from "~/models/team.server";
 import { requireUserId } from "~/session.server";
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   const userId = await requireUserId(request);
   invariant(params.leagueId, "leagueId not found");
 
-  const league = await getLeagueById({ id: params.leagueId, userId });
+  const [league, teams] = await Promise.all([
+    await getLeagueById({ id: params.leagueId, userId }),
+    await getTeamListItems(),
+  ]);
+
   if (!league) {
     throw new Response("Not Found", { status: 404 });
   }
-  return json({ league });
+
+  return json({ league, teams });
 };
 
 export const action = async ({ params, request }: ActionFunctionArgs) => {
@@ -45,7 +51,7 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
 };
 
 export default function LeagueDetailsPage() {
-  const { league } = useLoaderData<typeof loader>();
+  const { league, teams } = useLoaderData<typeof loader>();
 
   return (
     <div>
@@ -70,6 +76,20 @@ export default function LeagueDetailsPage() {
           </li>
         ))}
       </ul>
+
+      <div className="flex gap-3 flex-wrap justify-between">
+        {teams.map((team) => (
+          <div key={team.id} className="border rounded w-[calc(20%-0.75rem)]">
+            <div>
+              <img src={team.imageUrl} alt={team.name} />
+            </div>
+            <div>
+              <p>{team.name}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
       <hr className="my-4" />
       <Form method="post" className="flex flex-row gap-4">
         <button
