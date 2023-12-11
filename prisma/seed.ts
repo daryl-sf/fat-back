@@ -16,6 +16,9 @@ async function seed() {
   await prisma.league.deleteMany({}).catch(() => {
     // no worries if it doesn't exist yet
   });
+  await prisma.team.deleteMany({}).catch(() => {
+    // no worries if it doesn't exist yet
+  });
 
   const hashedPassword = await bcrypt.hash("daryliscool", 10);
 

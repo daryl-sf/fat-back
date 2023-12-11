@@ -77,10 +77,14 @@ export default function LeagueDetailsPage() {
         ))}
       </ul>
 
-      <div className="flex gap-3 flex-wrap justify-between">
+      <h4 className="text-xl font-semibold mt-6 my-3">Pick a team:</h4>
+      <div className="flex gap-3 flex-wrap">
         {teams.map((team) => (
-          <div key={team.id} className="border rounded w-[calc(20%-0.75rem)]">
-            <div>
+          <div
+            key={team.id}
+            className="w-64 flex gap-4 hover:drop-shadow-lg hover:scale-110 transition-transform border rounded-md bg-slate-100 p-2 grow-0"
+          >
+            <div className="shrink-0">
               <img src={team.imageUrl} alt={team.name} />
             </div>
             <div>
