@@ -4,21 +4,17 @@ import { prisma } from "~/db.server";
 
 export type { Team };
 
-export async function getTeamById({
-  id,
-}: Pick<Team, "id">) {
+export async function getTeamById({ id }: Pick<Team, "id">) {
   const team = prisma.team.findFirst({
-    where: { id }
+    where: { id },
   });
 
   return team;
 }
 
-export async function getTeamByName({
-  name,
-}: Pick<Team, "name">) {
+export async function getTeamByName({ name }: Pick<Team, "name">) {
   const team = prisma.team.findFirst({
-    where: { name }
+    where: { name },
   });
 
   return team;
