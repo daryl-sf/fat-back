@@ -62,17 +62,9 @@ export default function LeagueDetailsPage() {
       </p>
       <h4 className="text-xl font-semibold">Users:</h4>
       <ul className="pb-6">
-        {league.leagueUsers.map((user) => (
-          <li key={user.user.email}>
-            {user.userId} - {user.user.email}
-          </li>
-        ))}
-      </ul>
-      <h4 className="text-xl font-semibold">League Admins:</h4>
-      <ul>
-        {league.leagueAdmins.map((admin) => (
-          <li key={admin.user.email}>
-            {admin.userId} - {admin.user.email}
+        {league.members.map(({ user: { email, id }, isAdmin }) => (
+          <li key={email}>
+            {id} - {email} - {isAdmin ? "Admin" : "Member"}
           </li>
         ))}
       </ul>

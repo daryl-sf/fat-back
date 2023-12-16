@@ -3,121 +3,121 @@
     "name": "Arsenal",
     "shortName": "ARS",
     "imageUrl": "/images/arsenal.png",
-    "relegated": false
+    "primaryColor": "#EF0107"
   },
   {
     "name": "Aston Villa",
     "shortName": "AVL",
     "imageUrl": "/images/aston_villa.png",
-    "relegated": false
+    "primaryColor": "#95BFE5"
   },
   {
     "name": "Bournemouth",
     "shortName": "BOU",
     "imageUrl": "/images/bournemouth.png",
-    "relegated": false
+    "primaryColor": "#E62333"
   },
   {
     "name": "Brentford",
     "shortName": "BRE",
     "imageUrl": "/images/brentford.png",
-    "relegated": false
+    "primaryColor": "#FFD200"
   },
   {
     "name": "Brighton & Hove Albion",
     "shortName": "BHA",
     "imageUrl": "/images/brighton.png",
-    "relegated": false
+    "primaryColor": "#0057B8"
   },
   {
     "name": "Burnley",
     "shortName": "BUR",
     "imageUrl": "/images/burnley.png",
-    "relegated": false
+    "primaryColor": "#6C1D45"
   },
   {
     "name": "Chelsea",
     "shortName": "CHE",
     "imageUrl": "/images/chelsea.png",
-    "relegated": false
+    "primaryColor": "#034694"
   },
   {
     "name": "Crystal Palace",
     "shortName": "CRY",
     "imageUrl": "/images/crystal_palace.png",
-    "relegated": false
+    "primaryColor": "#1B458F"
   },
   {
     "name": "Everton",
     "shortName": "EVE",
     "imageUrl": "/images/everton.png",
-    "relegated": false
+    "primaryColor": "#274488"
   },
   {
     "name": "Fulham",
     "shortName": "FUL",
     "imageUrl": "/images/fulham.png",
-    "relegated": false
+    "primaryColor": "#000000"
   },
   {
     "name": "Liverpool",
     "shortName": "LIV",
     "imageUrl": "/images/liverpool.png",
-    "relegated": false
+    "primaryColor": "#C8102E"
   },
   {
     "name": "Luton Town FC",
     "shortName": "LUT",
     "imageUrl": "/images/luton.png",
-    "relegated": false
+    "primaryColor": "#FFD200"
   },
   {
     "name": "Manchester City",
     "shortName": "MCI",
     "imageUrl": "/images/manchester_city.png",
-    "relegated": false
+    "primaryColor": "#6CABDD"
   },
   {
     "name": "Manchester United",
     "shortName": "MUN",
     "imageUrl": "/images/manchester_united.png",
-    "relegated": false
+    "primaryColor": "#DA291C"
   },
   {
     "name": "Newcastle United",
     "shortName": "NEW",
     "imageUrl": "/images/newcastle.png",
-    "relegated": false
+    "primaryColor": "#241F20"
   },
   {
     "name": "Nottingham Forest",
     "shortName": "NOT",
     "imageUrl": "/images/nottingham_forest.png",
-    "relegated": false
+    "primaryColor": "#FFD200"
   },
   {
     "name": "Sheffield United",
     "shortName": "SHU",
     "imageUrl": "/images/sheffield_united.png",
-    "relegated": false
+    "primaryColor": "#EE2737"
   },
   {
     "name": "Tottenham Hotspur",
     "shortName": "TOT",
     "imageUrl": "/images/tottenham_hotspur.png",
-    "relegated": false
+    "primaryColor": "#274488"
   },
 
   {
     "name": "West Ham United",
     "shortName": "WHU",
     "imageUrl": "/images/west_ham.png",
-    "relegated": false
+    "primaryColor": "#7A263A"
   },
   {
     "name": "Wolverhampton Wanderers",
     "shortName": "WOL",
     "imageUrl": "/images/wolves.png",
-    "relegated": false
+    "primaryColor": "#FDB913"
   }
 ]

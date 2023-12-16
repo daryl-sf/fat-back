@@ -22,8 +22,13 @@ export async function getTeamByName({ name }: Pick<Team, "name">) {
 
 export async function getTeamListItems() {
   return prisma.team.findMany({
-    select: { id: true, name: true, imageUrl: true },
-    where: { relegated: false },
+    select: {
+      id: true,
+      name: true,
+      active: true,
+      imageUrl: true,
+    },
+    where: { active: true },
     orderBy: { name: "asc" },
   });
 }

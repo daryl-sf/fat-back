@@ -20,14 +20,26 @@ async function seed() {
     // no worries if it doesn't exist yet
   });
 
+  const adminRole = await prisma.role.create({
+    data: {
+      name: "ADMIN",
+    },
+  });
+
   const hashedPassword = await bcrypt.hash("daryliscool", 10);
 
   const user = await prisma.user.create({
     data: {
       email,
+      displayName: "Daryl",
       password: {
         create: {
           hash: hashedPassword,
+        },
+      },
+      roles: {
+        create: {
+          roleId: adminRole.id,
         },
       },
     },
@@ -36,6 +48,7 @@ async function seed() {
   await prisma.user.create({
     data: {
       email: "marina@remix.run",
+      displayName: "Marina",
       password: {
         create: {
           hash: await bcrypt.hash("marinaiscool", 10),
@@ -48,14 +61,11 @@ async function seed() {
     data: {
       name: "My League",
       inviteCode: generateInviteCode(),
-      leagueAdmins: {
+      members: {
         create: {
           userId: user.id,
-        },
-      },
-      leagueUsers: {
-        create: {
-          userId: user.id,
+          joinedAt: new Date(),
+          isAdmin: true,
         },
       },
     },
@@ -68,7 +78,8 @@ async function seed() {
           name: team.name,
           shortName: team.shortName,
           imageUrl: team.imageUrl,
-          relegated: team.relegated,
+          active: true,
+          primaryColor: team.primaryColor,
         },
       }),
     ),

@@ -7,18 +7,36 @@ generator client {
   provider = "prisma-client-js"
 }
 
+enum RoleEnum {
+  ADMIN
+}
+
 model User {
-  id    String @id @default(cuid())
-  email String @unique
+  id          String         @id @default(cuid())
+  email       String         @unique
+  displayName String?
+  leagues     LeagueMember[]
+  roles       UserRole[]
+
+  password Password?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
 
-  password     Password?
-  notes        Note[]
-  leagueUsers  LeagueUser[]
-  leagueAdmins LeagueAdmin[]
-  WeekPick     WeekPick[]
+model Role {
+  id    Int        @id @default(autoincrement())
+  name  RoleEnum
+  users UserRole[]
+}
+
+model UserRole {
+  userId String
+  roleId Int
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  role   Role   @relation(fields: [roleId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([userId, roleId])
 }
 
 model Password {
@@ -28,80 +46,38 @@ model Password {
   userId String @unique
 }
 
-model Note {
-  id    String @id @default(cuid())
-  title String
-  body  String
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId String
-}
-
 model League {
-  id           String        @id @default(cuid())
-  name         String
-  leagueUsers  LeagueUser[]
-  leagueAdmins LeagueAdmin[]
-  inviteCode   String        @unique
-
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  WeekPick  WeekPick[]
-}
-
-model LeagueUser {
-  id String @id @default(cuid())
-
-  league   League @relation(fields: [leagueId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  leagueId String
-
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId String
+  id         String         @id @default(cuid())
+  name       String
+  inviteCode String
+  members    LeagueMember[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-model LeagueAdmin {
-  id String @id @default(cuid())
-
-  league   League @relation(fields: [leagueId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+model LeagueMember {
+  userId   String
   leagueId String
-
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId String
+  joinedAt DateTime @default(now())
+  isAdmin  Boolean  @default(false)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  league   League   @relation(fields: [leagueId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-}
 
-model WeekPick {
-  id   String @id @default(cuid())
-  team Team   @relation(fields: [teamId], references: [id])
-  week Int
-
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId String
-
-  league   League @relation(fields: [leagueId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  leagueId String
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  teamId    String
+  @@id([userId, leagueId])
 }
 
 model Team {
-  id        String  @id @default(cuid())
-  name      String
-  shortName String
-  relegated Boolean @default(false)
-  imageUrl  String
+  id           String  @id @default(cuid())
+  name         String
+  shortName    String
+  active       Boolean @default(false)
+  imageUrl     String
+  primaryColor String
 
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  WeekPick  WeekPick[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

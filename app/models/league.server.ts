@@ -3,7 +3,9 @@ import type { User, League } from "@prisma/client";
 import { prisma } from "~/db.server";
 import { generateInviteCode } from "~/utils";
 
-export type { League } from "@prisma/client";
+import { getUserById } from "./user.server";
+
+export type { League, LeagueMember } from "@prisma/client";
 
 export async function getLeagueById({
   id,
@@ -12,24 +14,17 @@ export async function getLeagueById({
   userId: User["id"];
 }) {
   const league = prisma.league.findFirst({
-    where: { id, leagueUsers: { some: { userId } } },
+    where: { id, members: { some: { userId } } },
     include: {
-      leagueAdmins: {
+      members: {
         select: {
           userId: true,
+          isAdmin: true,
           user: {
             select: {
+              id: true,
               email: true,
-            },
-          },
-        },
-      },
-      leagueUsers: {
-        select: {
-          userId: true,
-          user: {
-            select: {
-              email: true,
+              displayName: true,
             },
           },
         },
@@ -46,14 +41,44 @@ export async function deleteLeague({
 }: Pick<League, "id"> & {
   userId: User["id"];
 }) {
-  return prisma.league.deleteMany({
-    where: { id, leagueAdmins: { some: { userId } } },
+  const user = await getUserById(userId);
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  const league = await prisma.league.findFirst({
+    where: { id },
+    include: {
+      members: {
+        select: {
+          userId: true,
+          isAdmin: true,
+        },
+      },
+    },
   });
+
+  if (!league) {
+    throw new Error("League not found");
+  }
+
+  if (user.roles.some(({ role }) => role.name === "ADMIN")) {
+    // App admins can delete any league
+    return prisma.league.delete({ where: { id: league.id } });
+  }
+
+  if (
+    !league.members.some(({ userId, isAdmin }) => userId === user.id && isAdmin)
+  ) {
+    throw new Error("User is not an admin");
+  }
+
+  return prisma.league.delete({ where: { id: league.id } });
 }
 
 export async function getLeagueListItems({ userId }: { userId: User["id"] }) {
   return prisma.league.findMany({
-    where: { leagueUsers: { some: { userId } } },
+    where: { members: { some: { userId } } },
     select: { id: true, name: true },
     orderBy: { updatedAt: "desc" },
   });
@@ -69,14 +94,11 @@ export async function createLeague({
     data: {
       name,
       inviteCode: generateInviteCode(),
-      leagueAdmins: {
+      members: {
         create: {
           userId,
-        },
-      },
-      leagueUsers: {
-        create: {
-          userId,
+          isAdmin: true,
+          joinedAt: new Date(),
         },
       },
     },
@@ -97,10 +119,11 @@ export async function joinLeague({
     throw new Error("Invalid invite code");
   }
 
-  return prisma.leagueUser.create({
+  return prisma.leagueMember.create({
     data: {
-      userId,
       leagueId: league.id,
+      userId,
+      joinedAt: new Date(),
     },
   });
 }
@@ -111,7 +134,7 @@ export function leaveLeague({
 }: Pick<League, "id"> & {
   userId: User["id"];
 }) {
-  return prisma.leagueUser.deleteMany({
+  return prisma.leagueMember.deleteMany({
     where: { leagueId: id, userId },
   });
 }
