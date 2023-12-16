@@ -27,6 +27,7 @@ export async function getTeamListItems() {
       name: true,
       active: true,
       imageUrl: true,
+      primaryColor: true,
     },
     where: { active: true },
     orderBy: { name: "asc" },
