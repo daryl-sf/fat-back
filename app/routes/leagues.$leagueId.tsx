@@ -6,6 +6,7 @@ import {
   useLoaderData,
   useRouteError,
 } from "@remix-run/react";
+import { useState } from "react";
 import invariant from "tiny-invariant";
 
 import {
@@ -52,6 +53,7 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
 
 export default function LeagueDetailsPage() {
   const { league, teams } = useLoaderData<typeof loader>();
+  const [selectedTeamId, setSelectedTeamId] = useState<string | null>(null);
 
   return (
     <div>
@@ -70,21 +72,34 @@ export default function LeagueDetailsPage() {
       </ul>
 
       <h4 className="text-xl font-semibold mt-6 my-3">Pick a team:</h4>
-      <div className="flex gap-3 flex-wrap">
+      <div className="flex gap-3 flex-wrap mb-4">
         {teams.map((team) => (
-          <div
+          <button
             key={team.id}
-            className="w-64 flex gap-4 hover:drop-shadow-lg hover:scale-110 transition-transform border rounded-md bg-slate-100 p-2 grow-0"
+            className={`w-64 flex gap-4 hover:drop-shadow-lg hover:scale-100 cursor-pointer transition-transform border rounded-md bg-slate-100 p-2 grow-0 items-center ${
+              team.id === selectedTeamId
+                ? "border-blue-500"
+                : "border-transparent"
+            }`}
+            onClick={() => setSelectedTeamId(team.id)}
           >
             <div className="shrink-0">
-              <img src={team.imageUrl} alt={team.name} />
+              <img src={team.imageUrl} alt={team.name} className="h-10" />
             </div>
             <div>
               <p>{team.name}</p>
             </div>
-          </div>
+          </button>
         ))}
       </div>
+
+      <button
+        type="submit"
+        disabled={!selectedTeamId}
+        className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        Confirm
+      </button>
 
       <hr className="my-4" />
       <Form method="post" className="flex flex-row gap-4">

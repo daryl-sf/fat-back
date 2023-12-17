@@ -45,18 +45,28 @@ export default function LeagueIndexPage() {
           </Link>
         </p>
 
-        <label className="flex w-full flex-col gap-1">
-          <span>Invite Code: </span>
-          <input
-            ref={inviteCodeRef}
-            name="inviteCode"
-            className="flex-1 rounded-md border-2 border-blue-500 px-3 text-lg leading-loose"
-            aria-invalid={actionData?.errors?.inviteCode ? true : undefined}
-            aria-errormessage={
-              actionData?.errors?.inviteCode ? "inviteCode-error" : undefined
-            }
-          />
-        </label>
+        <div className="flex gap-3 items-end">
+          <label className="flex flex-col gap-1 w-80">
+            <span>Invite Code: </span>
+            <input
+              ref={inviteCodeRef}
+              name="inviteCode"
+              className="flex-1 rounded-md border-2 border-blue-500 px-3 text-lg leading-loose"
+              aria-invalid={actionData?.errors?.inviteCode ? true : undefined}
+              aria-errormessage={
+                actionData?.errors?.inviteCode ? "inviteCode-error" : undefined
+              }
+            />
+          </label>
+
+          <button
+            type="submit"
+            className="px-4 py-2 bg-blue-500 text-white rounded-md h-10"
+          >
+            Join League
+          </button>
+        </div>
+
         {actionData?.errors?.inviteCode ? (
           <div
             id="inviteCode-error"
@@ -65,15 +75,6 @@ export default function LeagueIndexPage() {
             {actionData.errors.inviteCode}
           </div>
         ) : null}
-
-        <div className="text-right">
-          <button
-            type="submit"
-            className="px-4 py-2 bg-blue-500 text-white rounded-md"
-          >
-            Join League
-          </button>
-        </div>
       </div>
     </Form>
   );
